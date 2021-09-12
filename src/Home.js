@@ -87,6 +87,16 @@ export default function Home({ contentNavigation }) {
       false
     );
   };
+  const loadById = (callbackExplorer, niveau, id) => {
+    fetchData(
+      "/Read/" + niveau + "/" + id + "/" + dataConnect.pseudo,
+      methodType.Get,
+      null,
+      { ...dataToGet, callback: (data) => callbackExplorer(data) },
+      true,
+      false
+    );
+  };
   const createBookMark = (data) => {
     console.log("bm : " + JSON.stringify(data));
     fetchData(
@@ -261,6 +271,7 @@ export default function Home({ contentNavigation }) {
       </div>
       <Explorer
         load={(f) => loadExplorer(f)}
+        loadElementsById={(data, niveau, id) => loadById(data, niveau, id)}
         userId={dataConnect.pseudo}
         createBookMark={(data) => createBookMark(data)}
         loadBookMark={(data) => loadBookMark(data)}

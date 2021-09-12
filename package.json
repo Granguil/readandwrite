@@ -2,6 +2,7 @@
   "name": "randw",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/Accueil",
   "dependencies": {
     "button": "file:../../ModulesReact/button/button-1.0.0.tgz",
     "card": "file:../../ModulesReact/card/card-1.0.0.tgz",
