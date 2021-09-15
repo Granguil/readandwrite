@@ -1,27 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { resource } from "resource";
 import { dataConnect, CheckConnexion, roleTypeList } from "connexion";
 import Header, { connectByDefault, titleByDefault } from "header";
-import { NavigationDisplay } from "navigation";
-import { cardByDefault, FormCard, SimpleCard } from "card";
-import ToastersDisplay, {
-  NewToaster,
-  positionToaster,
-  colorToaster,
-} from "toaster";
-import {
-  fetchData,
-  dataToGet,
-  methodType,
-  dataToSend,
-  type,
-} from "fetchhelper";
-import { ButtonCustom, ButtonTypeList } from "button";
+import { NavigationDisplay, NavigationRouterExact } from "navigation";
+import ToastersDisplay from "toaster";
+import { fetchData, dataToGet, methodType, dataToSend } from "fetchhelper";
+
 import style from "./style.module.css";
-import { Explorer } from "explorer";
+import UserReader from "./user/UserReader";
+import AdminReader from "./admin/AdminReader";
+import AdminImport from "./admin/AdminImport";
+import AdminWriting from "./admin/AdminWriting";
+import AdminHome from "./admin/AdminHome";
+import UserHome from "./user/UserHome";
 
 export default function Home({ contentNavigation }) {
-  const [reload, setReload] = useState(false);
   const connectHeader = { ...connectByDefault };
   connectHeader.connected = dataConnect.connected;
   connectHeader.connected = dataConnect.pseudo;
@@ -61,15 +54,7 @@ export default function Home({ contentNavigation }) {
           : "sitedegranguil@gmail.com",
     }
   );
-  const cardFormCustom = {
-    ...cardByDefault,
-    action: "/",
-    method: "GET",
-    submit: (e) => {
-      e.preventDefault();
-      console.log("Form Submit");
-    },
-  };
+
   const navigationRequest = (contentObj, callbackNav) => {
     const ds = { ...dataToSend, content: contentObj };
     console.log(contentObj);
@@ -77,140 +62,6 @@ export default function Home({ contentNavigation }) {
     fetchData("Navigation/Get", methodType.Post, ds, dg, true, false);
   };
 
-  const loadExplorer = (callbackExplorer) => {
-    fetchData(
-      "/Read/All/" + dataConnect.pseudo,
-      methodType.Get,
-      null,
-      { ...dataToGet, callback: (data) => callbackExplorer(data) },
-      true,
-      false
-    );
-  };
-  const loadById = (callbackExplorer, niveau, id) => {
-    fetchData(
-      "/Read/" + niveau + "/" + id + "/" + dataConnect.pseudo,
-      methodType.Get,
-      null,
-      { ...dataToGet, callback: (data) => callbackExplorer(data) },
-      true,
-      false
-    );
-  };
-  const createBookMark = (data) => {
-    console.log("bm : " + JSON.stringify(data));
-    fetchData(
-      "/Read/AddBookMark",
-      methodType.Post,
-      { ...dataToSend, content: data, type: type.json },
-      {
-        ...dataToGet,
-        callback: (bool) => {
-          bool ? alert("Success BM") : alert("Error BM");
-        },
-      },
-      true,
-      false
-    );
-  };
-  const readValidated = (data) => {
-    fetchData(
-      "/Read/ReadByUser",
-      methodType.Post,
-      { ...dataToSend, content: data, type: type.json },
-      {
-        ...dataToGet,
-        callback: (bool) => {
-          bool
-            ? NewToaster({
-                title: "Success",
-                position: positionToaster.left,
-                color: colorToaster.success,
-                text: "Scene marked as read",
-              })
-            : NewToaster({
-                title: "Fail",
-                position: positionToaster.left,
-                color: colorToaster.error,
-                text: "Fail to mark scene",
-              });
-        },
-      },
-      true,
-      false
-    );
-  };
-  const loadBookMark = (setBookMark) => {
-    fetchData(
-      "/Read/GetBookMarks/" + dataConnect.pseudo,
-      methodType.Get,
-      null,
-      { ...dataToGet, callback: (data) => setBookMark(data) },
-      true,
-      false
-    );
-  };
-  const deleteBookMark = (id) => {
-    fetchData(
-      "/Read/DeleteBookMark",
-      methodType.Post,
-      { ...dataToSend, content: { id }, type: type.json },
-      {
-        ...dataToGet,
-        callback: () => {
-          alert("Delete");
-          NewToaster({
-            title: "Delete",
-            position: positionToaster.left,
-            color: colorToaster.error,
-            text: "BookMark Deleted",
-          });
-          setReload(false);
-          console.log(reload);
-        },
-      },
-      true,
-      false
-    );
-  };
-  const buttonsList = {
-    createBM: (text, callback) => {
-      return (
-        <ButtonCustom
-          text={text}
-          callback={(data) => callback(data)}
-          type={ButtonTypeList.create}
-        ></ButtonCustom>
-      );
-    },
-    updateBM: (text, callback) => {
-      return (
-        <ButtonCustom
-          text={text}
-          callback={(data) => callback(data)}
-          type={ButtonTypeList.edit}
-        ></ButtonCustom>
-      );
-    },
-    deleteBM: (text, callback) => {
-      return (
-        <ButtonCustom
-          text={text}
-          callback={(data) => callback(data)}
-          type={ButtonTypeList.deleteItem}
-        ></ButtonCustom>
-      );
-    },
-    readValidated: (text, callback) => {
-      return (
-        <ButtonCustom
-          text={text}
-          callback={(data) => callback(data)}
-          type={ButtonTypeList.create}
-        ></ButtonCustom>
-      );
-    },
-  };
   return (
     <div>
       <Header
@@ -224,62 +75,37 @@ export default function Home({ contentNavigation }) {
         resources={resource.list !== undefined ? resource.list.nav : {}}
       />
       <div className={style.body}>
-        <ButtonCustom
-          text="Submit"
-          type={ButtonTypeList.create}
-          callback={() => {
-            NewToaster({
-              title: "Création",
-              position: positionToaster.left,
-              color: colorToaster.info,
-              text: "Création de l'élément",
-            });
-          }}
-        />
-        <ButtonCustom
-          text="Get Secret"
-          type={ButtonTypeList.edit}
-          callback={() =>
-            fetchData(
-              "/Secret/Get/Test1",
-              methodType.Get,
-              null,
-              {
-                ...dataToGet,
-                callback: (data) => console.log(data),
-              },
-              true,
-              false
-            )
-          }
-        />
+        <NavigationRouterExact link="/Accueil/User/Home">
+          <CheckConnexion bool={true} role={roleTypeList.USER}>
+            <UserHome />
+          </CheckConnexion>
+        </NavigationRouterExact>
+        <NavigationRouterExact link="/Accueil/Admin/Home">
+          <CheckConnexion bool={true} role={roleTypeList.MANAGER}>
+            <AdminHome />
+          </CheckConnexion>
+        </NavigationRouterExact>
+        <NavigationRouterExact link="/Accueil/Action/Reading">
+          <CheckConnexion bool={true} role={roleTypeList.USER}>
+            <UserReader />
+          </CheckConnexion>
+        </NavigationRouterExact>
+        <NavigationRouterExact link="/Accueil/Action/Reading">
+          <CheckConnexion bool={true} role={roleTypeList.MANAGER}>
+            <AdminReader />
+          </CheckConnexion>
+        </NavigationRouterExact>
+        <NavigationRouterExact link="/Accueil/Action/Import">
+          <CheckConnexion bool={true} role={roleTypeList.MANAGER}>
+            <AdminImport />
+          </CheckConnexion>
+        </NavigationRouterExact>
+        <NavigationRouterExact link="/Accueil/Action/Writing">
+          <CheckConnexion bool={true} role={roleTypeList.MANAGER}>
+            <AdminWriting />
+          </CheckConnexion>
+        </NavigationRouterExact>
       </div>
-      <div className={style.body}>
-        <FormCard card={cardFormCustom}>
-          <h4>Submit</h4>
-        </FormCard>
-        <CheckConnexion bool={true} role={roleTypeList.MANAGER}>
-          <SimpleCard>
-            <h3>Simple Card</h3>
-          </SimpleCard>
-        </CheckConnexion>
-        <CheckConnexion bool={true} role={roleTypeList.USER}>
-          <SimpleCard>
-            <h1>Error if it's displaying !</h1>
-          </SimpleCard>
-        </CheckConnexion>
-      </div>
-      <Explorer
-        load={(f) => loadExplorer(f)}
-        loadElementsById={(data, niveau, id) => loadById(data, niveau, id)}
-        userId={dataConnect.pseudo}
-        createBookMark={(data) => createBookMark(data)}
-        loadBookMark={(data) => loadBookMark(data)}
-        deleteBookMark={(id) => deleteBookMark(id)}
-        buttonsList={buttonsList}
-        readValidated={(data) => readValidated(data)}
-        resources={resource.list !== undefined ? resource.list.explorer : {}}
-      />
       <ToastersDisplay />
     </div>
   );
