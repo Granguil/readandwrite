@@ -57,7 +57,6 @@ export default function Home({ contentNavigation }) {
 
   const navigationRequest = (contentObj, callbackNav) => {
     const ds = { ...dataToSend, content: contentObj };
-    console.log(contentObj);
     const dg = { ...dataToGet, callback: (data) => callbackNav(data) };
     fetchData("Navigation/Get", methodType.Post, ds, dg, true, false);
   };

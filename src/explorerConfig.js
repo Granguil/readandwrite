@@ -75,7 +75,6 @@ export const explorerConfig = {
       );
     },
     create: (data) => {
-      console.log("bm : " + JSON.stringify(data));
       fetchData(
         "/Read/AddBookMark",
         methodType.Post,

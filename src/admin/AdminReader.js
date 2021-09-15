@@ -56,8 +56,6 @@ function AdminReader() {
               disabled={!loading ? true : false}
               onChange={(e) => {
                 setLoadAll(e.target.checked);
-
-                console.log("LA : " + loadAll);
               }}
             />
           </div>
@@ -72,8 +70,6 @@ function AdminReader() {
               disabled={!loading ? true : false}
               onChange={(e) => {
                 setDisplayAll(e.target.checked);
-
-                console.log("DA : " + displayAll);
               }}
             />
           </div>

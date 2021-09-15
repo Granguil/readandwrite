@@ -234,15 +234,11 @@ export default function AdminWriting() {
               sb.findIndex((x) => x.order === modifyBlock),
               1
             );
-            console.log("ITR");
-            console.log(itemToReplace);
             const blockToModify = {
               order: modifyBlock,
               content: e.target.value,
               id: itemToReplace[0].id,
             };
-            console.log("BTM");
-            console.log(itemToReplace[0].id);
             sb.push(blockToModify);
             setBlock({ ...savingBlock, blocks: [...sb] });
           }}

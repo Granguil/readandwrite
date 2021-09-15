@@ -7,8 +7,6 @@ import { fetchData, dataToGet, methodType, type } from "fetchhelper";
 
 export default function Main() {
   let history = useHistory();
-  console.log("history init");
-  console.log(history);
   const [load, loader] = useState(false);
   const [contentNavigation, setContentNavigation] = useState({
     pseudo: null,
@@ -24,9 +22,7 @@ export default function Main() {
         ...dataToGet,
         type: type.json,
         callback: (data) => {
-          console.log(data);
           resource.load(data);
-          console.log(resource.list);
           loader(true);
         },
       },
@@ -69,13 +65,8 @@ export default function Main() {
         site: process.env.REACT_APP_SITE_NAME,
       },
     });
-    console.log(contentNavigation);
-    console.log("Test History");
-    console.log(data.urlHome);
-    console.log(history);
     if (history !== undefined) {
       history.push(dataConnexion.urlHome);
-      console.log(history);
     }
     //loader(true);
   };
