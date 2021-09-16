@@ -1,8 +1,14 @@
 import React from "react";
 import { resource } from "resource";
 import { dataConnect, CheckConnexion, roleTypeList } from "connexion";
+
+//Helper to display the header of the site
 import Header, { connectByDefault, titleByDefault } from "header";
+
+//Helper to get et display the authorized url for the role of the user
 import { NavigationDisplay, NavigationRouterExact } from "navigation";
+
+//Helper to display toaster to inform user on the result of his action
 import ToastersDisplay from "toaster";
 import { fetchData, dataToGet, methodType, dataToSend } from "fetchhelper";
 
@@ -15,6 +21,7 @@ import AdminHome from "./admin/AdminHome";
 import UserHome from "./user/UserHome";
 
 export default function Home({ contentNavigation }) {
+  //Start Data to display in the header
   const connectHeader = { ...connectByDefault };
   connectHeader.connected = dataConnect.connected;
   connectHeader.connected = dataConnect.pseudo;
@@ -64,7 +71,9 @@ export default function Home({ contentNavigation }) {
           : "sitedegranguil@gmail.com",
     }
   );
+  //End data to dispaly in the header
 
+  //Function to get navigation data
   const navigationRequest = (contentObj, callbackNav) => {
     const ds = { ...dataToSend, content: contentObj };
     const dg = { ...dataToGet, callback: (data) => callbackNav(data) };
@@ -84,6 +93,7 @@ export default function Home({ contentNavigation }) {
         resources={resource.list !== undefined ? resource.list.nav : {}}
       />
       <div className={style.body}>
+        {/*Component depending on the url and check if the role is authorized */}
         <NavigationRouterExact link="/Accueil/User/Home">
           <CheckConnexion bool={true} role={roleTypeList.USER}>
             <UserHome />
@@ -115,6 +125,7 @@ export default function Home({ contentNavigation }) {
           </CheckConnexion>
         </NavigationRouterExact>
       </div>
+      {/*Component used to centralize the management of the toasters */}
       <ToastersDisplay />
     </div>
   );

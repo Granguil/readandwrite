@@ -1,5 +1,7 @@
 import React from "react";
 import { NavigationBrowser, NavigationRouter } from "navigation";
+
+//Get the CSS of custom modules
 import "navigation/dist/index.css";
 import "header/dist/index.css";
 import "card/dist/index.css";
