@@ -1,3 +1,4 @@
+//Helper to display cards
 import { SimpleCard } from "card";
 import { dataConnect } from "connexion";
 import React from "react";

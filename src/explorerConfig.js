@@ -7,11 +7,16 @@ import {
 } from "fetchhelper";
 import { dataConnect } from "connexion";
 import { NewToaster, positionToaster, colorToaster } from "toaster";
+
+//Helper to generate popup
 import { Popup } from "popup";
+
+//Helper to generate buttons
 import { ButtonCustom, ButtonTypeList } from "button";
 import resource from "resource";
 
 export const explorerConfig = {
+  //Function to load data to display in the explorer
   load: {
     config: (
       setDisplayAll,
@@ -21,6 +26,7 @@ export const explorerConfig = {
       setInfoPopup,
       setConfig
     ) => {
+      //Get the config of the explorer
       fetchData(
         "/Explorer/GetConfig/explorer",
         methodType.Get,
@@ -43,6 +49,7 @@ export const explorerConfig = {
         false
       );
     },
+    //Function to load all data (use if the function loadAll is active)
     allData: (callbackExplorer) => {
       fetchData(
         "/Read/All/" + dataConnect.pseudo,
@@ -53,6 +60,7 @@ export const explorerConfig = {
         false
       );
     },
+    //Function to load data by the id of parent (use if the function loadAll is not active)
     byId: (callbackExplorer, niveau, id) => {
       fetchData(
         "/Read/" + niveau + "/" + id + "/" + dataConnect.pseudo,
@@ -64,6 +72,7 @@ export const explorerConfig = {
       );
     },
   },
+  //FUnctions to manage bookmarks and mark as read
   bookmark: {
     load: (setBookMark) => {
       fetchData(
@@ -146,6 +155,7 @@ export const explorerConfig = {
       );
     },
   },
+  //Buttons and Popup display in explorer (BM for bookmark)
   componant: {
     buttonsList: {
       createBM: (text, callback) => {
@@ -175,6 +185,7 @@ export const explorerConfig = {
           ></ButtonCustom>
         );
       },
+      //Mark as read
       readValidated: (text, callback) => {
         return (
           <ButtonCustom

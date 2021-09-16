@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from "react";
+
+//Helper to display  an explorer to navigate in the tree of data
 import { Explorer } from "explorer";
 import { resource } from "resource";
 import { dataConnect } from "connexion";
 import { explorerConfig } from "../explorerConfig";
 
 function UserReader() {
+  //State to reload after a delete of bookmark
   const [reload, setReload] = useState(false);
+
+  //States of the data can be configured
   const [numberCard, setNumberCard] = useState(0);
   const [displayAll, setDisplayAll] = useState(false);
   const [loadAll, setLoadAll] = useState(false);
   const [withInfo, setWithInfo] = useState(false);
   const [infoPopup, setInfoPopup] = useState(false);
+
+  //State to wait before to get the recorded configuration
   const [getConfig, setConfig] = useState(false);
+
+  //Get the configuration of the explorer (centralized in another file)
   useEffect(() => {
     explorerConfig.load.config(
       setDisplayAll,
