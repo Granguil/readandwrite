@@ -10,6 +10,7 @@ import {
   type,
 } from "fetchhelper";
 import { NewToaster, positionToaster, colorToaster } from "toaster";
+import resource from "resource";
 
 export default function adminImport() {
   const cardText = {
@@ -26,7 +27,7 @@ export default function adminImport() {
           type: type.json,
           callback: (data) => {
             NewToaster({
-              title: "Import New Text",
+              title: resource.list.importNewText,
               position: positionToaster.left,
               color: colorToaster.info,
               text: data.message,
@@ -52,7 +53,7 @@ export default function adminImport() {
           type: type.json,
           callback: (data) => {
             NewToaster({
-              title: "Update Text",
+              title: resource.list.updateText,
               position: positionToaster.left,
               color: colorToaster.info,
               text: data.message,
@@ -77,7 +78,7 @@ export default function adminImport() {
           type: type.json,
           callback: (data) => {
             NewToaster({
-              title: "New Chapter",
+              title: resource.list.newChapter,
               position: positionToaster.left,
               color: colorToaster.info,
               text: data.message,
@@ -102,7 +103,7 @@ export default function adminImport() {
           type: type.json,
           callback: (data) => {
             NewToaster({
-              title: "Update Chapter",
+              title: resource.list.updateChapter,
               position: positionToaster.left,
               color: colorToaster.info,
               text: data.message,
@@ -120,16 +121,16 @@ export default function adminImport() {
         <div className={style.envInput}>
           <h3>New Text</h3>
           <select name="NewUniverse">
-            <option value="1">New Universe</option>
-            <option value="0">Existing Universe</option>
+            <option value="1">{resource.list.newUniverse}</option>
+            <option value="0">{resource.list.existingUniverse}</option>
           </select>
-          <label htmlFor={"NameNU"}>Name of the Word File</label>
+          <label htmlFor={"NameNU"}>{resource.list.nameWordFile}</label>
           <input id="NameNU" type="text" name="nameFile" />
-          <label htmlFor={"FileNU"}>Word File to Import</label>
+          <label htmlFor={"FileNU"}>{resource.list.wordFileToImport}</label>
           <input id="FileNU" type="file" name="newText" accept=".docx" />
           <div className={style.center}>
             <ButtonCustom
-              text={"Validate"}
+              text={resource.list.validate}
               callback={() => {}}
               type={ButtonTypeList.create}
             />
@@ -139,17 +140,17 @@ export default function adminImport() {
       <FormCard card={cardUpdateText}>
         <div className={style.envInput}>
           <h3>Update Text</h3>
-          <label htmlFor={"NameUU"}>Name of the Word File</label>
+          <label htmlFor={"NameUU"}>{resource.list.nameWordFile}</label>
           <input id="NameUU" type="text" name="nameFile" />
-          <label htmlFor={"UniverseUU"}>Universe</label>
+          <label htmlFor={"UniverseUU"}>{resource.list.universe}</label>
           <input id="UniverseUU" type="text" name="universe" />
-          <label htmlFor={"NameUU"}>Text Name</label>
+          <label htmlFor={"NameUU"}>{resource.list.textName}</label>
           <input id="NameUU" type="text" name="textName" />
-          <label htmlFor={"FileUU"}>Word File to Import</label>
+          <label htmlFor={"FileUU"}>{resource.list.wordFileToImport}</label>
           <input id="FileUU" type="file" name="newText" accept=".docx" />
           <div className={style.center}>
             <ButtonCustom
-              text={"Validate"}
+              text={resource.list.validate}
               callback={() => {}}
               type={ButtonTypeList.create}
             />
@@ -159,17 +160,17 @@ export default function adminImport() {
       <FormCard card={cardChapter}>
         <div className={style.envInput}>
           <h3>Add Chapter</h3>
-          <label htmlFor={"NameAC"}>Name of the Word File</label>
+          <label htmlFor={"NameAC"}>{resource.list.nameWordFile}</label>
           <input id="NameAC" type="text" name="nameFile" />
-          <label htmlFor={"UniverseAC"}>Universe</label>
+          <label htmlFor={"UniverseAC"}>{resource.list.universe}</label>
           <input id="UniverseAC" type="text" name="universe" />
-          <label htmlFor={"NameAC"}>Text Name</label>
+          <label htmlFor={"NameAC"}>{resource.list.textName}</label>
           <input id="NameAC" type="text" name="textName" />
-          <label htmlFor={"FileAC"}>Word File to Import</label>
+          <label htmlFor={"FileAC"}>{resource.list.wordFileToImport}</label>
           <input id="FileAC" type="file" name="newText" accept=".docx" />
           <div className={style.center}>
             <ButtonCustom
-              text={"Validate"}
+              text={resource.list.validate}
               callback={() => {}}
               type={ButtonTypeList.create}
             />
@@ -179,19 +180,19 @@ export default function adminImport() {
       <FormCard card={cardUpdateChapter}>
         <div className={style.envInput}>
           <h3>Update Chapter</h3>
-          <label htmlFor={"NameUC"}>Name of the Word File</label>
+          <label htmlFor={"NameUC"}>{resource.list.nameWordFile}</label>
           <input id="NameUC" type="text" name="nameFile" />
-          <label htmlFor={"UniverseUC"}>Universe</label>
+          <label htmlFor={"UniverseUC"}>{resource.list.universe}</label>
           <input id="UniverseUC" type="text" name="universe" />
-          <label htmlFor={"NameUC"}>Text Name</label>
+          <label htmlFor={"NameUC"}>{resource.list.textName}</label>
           <input id="NameUC" type="text" name="textName" />
-          <label htmlFor={"NumeroUC"}>Chapter Number</label>
+          <label htmlFor={"NumeroUC"}>{resource.list.numChapter}</label>
           <input id="NumeroUC" type="number" name="numero" />
-          <label htmlFor={"FileUC"}>Word File to Import</label>
+          <label htmlFor={"FileUC"}>{resource.list.wordFileToImport}</label>
           <input id="FileUC" type="file" name="newText" accept=".docx" />
           <div className={style.center}>
             <ButtonCustom
-              text={"Validate"}
+              text={resource.list.validate}
               callback={() => {}}
               type={ButtonTypeList.create}
             />

@@ -3,20 +3,11 @@ import { SimpleCard } from "card";
 import { dataToGet, dataToSend, fetchData, methodType } from "fetchhelper";
 import { PopupChildren } from "popup";
 import React, { useEffect, useState } from "react";
+import resource from "resource";
 import { NewToaster, positionToaster, colorToaster } from "toaster";
 import Style from "./../carte.module.css";
 
 export default function AdminWriting() {
-  const [savingElement, setElement] = useState({
-    readType: "UNIVERSE",
-    parent: null,
-    isInserted: false,
-    isUpdated: false,
-    isAdded: true,
-    title: "",
-    info: "",
-    numero: -1,
-  });
   const [savingBlock, setBlock] = useState({
     parent: null,
     blocks: [{ content: "", order: -1, id: null, status: "NONE" }],
@@ -212,7 +203,11 @@ export default function AdminWriting() {
           item.order++;
         }
       }
-      sbb.push({ order: orderOfNewBlock, content: "New Block", status: State });
+      sbb.push({
+        order: orderOfNewBlock,
+        content: resource.list.newBlock,
+        status: State,
+      });
     } else if (State === "DELETE") {
       let itemToReplace = sbb.splice(
         sbb.findIndex((x) => x.order === modifyBlock),
@@ -237,7 +232,7 @@ export default function AdminWriting() {
         ...dataToGet,
         callback: (data) => {
           NewToaster({
-            title: "Update Blocks",
+            title: resource.list.saveBlocks,
             position: positionToaster.left,
             color: colorToaster.info,
             text: data.message,
@@ -254,7 +249,7 @@ export default function AdminWriting() {
   const buttonSave = () => {
     return (
       <ButtonCustom
-        text={"Save"}
+        text={resource.list.save}
         callback={() => {
           saveBlocks(false, "NONE");
           setDisplayPopup(false);
@@ -266,7 +261,7 @@ export default function AdminWriting() {
   const buttonSaveAndPublish = () => {
     return (
       <ButtonCustom
-        text={"Save And Publish Scene"}
+        text={resource.list.saveAndPublish}
         callback={() => {
           saveBlocks(true, "NONE");
           setDisplayPopup(false);
@@ -278,7 +273,7 @@ export default function AdminWriting() {
   const buttonDelete = () => {
     return (
       <ButtonCustom
-        text={"Delete Block"}
+        text={resource.list.deleteBlock}
         callback={() => {
           saveBlocks(true, "DELETE");
           setDisplayPopup(false);
@@ -290,7 +285,7 @@ export default function AdminWriting() {
   const buttonReturn = () => {
     return (
       <ButtonCustom
-        text={"Cancel"}
+        text={resource.list.cancel}
         callback={() => {
           setModifyBlock(-1);
           setModifyText("");
@@ -314,7 +309,7 @@ export default function AdminWriting() {
         <div className={Style.envInput}>
           <div className={Style.align}>
             <div>
-              <label htmlFor={"UniverseList"}>Universe</label>
+              <label htmlFor={"UniverseList"}>{resource.list.universe}</label>
             </div>
             <select
               id="UniverseList"
@@ -331,7 +326,7 @@ export default function AdminWriting() {
           </div>
           <div className={Style.align}>
             <div>
-              <label htmlFor={"BookList"}>Book</label>
+              <label htmlFor={"BookList"}>{resource.list.book}</label>
             </div>
             <select
               id="BookList"
@@ -348,7 +343,7 @@ export default function AdminWriting() {
           </div>
           <div className={Style.align}>
             <div>
-              <label htmlFor={"ChapterList"}>Chapter</label>
+              <label htmlFor={"ChapterList"}>{resource.list.chapter}</label>
             </div>
             <select
               id="ChapterList"
@@ -367,7 +362,7 @@ export default function AdminWriting() {
           </div>
           <div className={Style.align}>
             <div>
-              <label htmlFor={"SceneList"}>Scene</label>
+              <label htmlFor={"SceneList"}>{resource.list.scene}</label>
             </div>
             <select
               id="SceneList"
@@ -386,7 +381,7 @@ export default function AdminWriting() {
           </div>
           <div className={Style.center}>
             <ButtonCustom
-              text={"Add Block"}
+              text={resource.list.addBlock}
               callback={() => {
                 addBlocks();
                 setOrderOfNewBlock(1);
@@ -395,7 +390,7 @@ export default function AdminWriting() {
             />
           </div>
           <div>
-            <label htmlFor={"Order"}>Order of new block</label>
+            <label htmlFor={"Order"}>{resource.list.orderOfNewBlock}</label>
           </div>
           <input
             className={Style.orderNewBlock}
@@ -410,10 +405,10 @@ export default function AdminWriting() {
                 orderNew !== ""
               ) {
                 NewToaster({
-                  title: "Out Of Bound",
+                  title: resource.list.outOfBounds,
                   position: positionToaster.left,
                   color: colorToaster.error,
-                  text: "Invalid Order of New Block",
+                  text: resource.list.invalidOrderNewBlock,
                 });
               } else {
                 console.log(orderNew);
@@ -429,14 +424,14 @@ export default function AdminWriting() {
           return (
             <SimpleCard key={index}>
               <div className={Style.block}>
-                <h2>{"Block n°" + d.order}</h2>
+                <h2>{resource.list.blockNum + "" + d.order}</h2>
 
                 <div>{d.text}</div>
               </div>
               {modifyBlock === -1 ? (
                 <div className={Style.center}>
                   <ButtonCustom
-                    text={"Modify"}
+                    text={resource.list.edit}
                     callback={() => {
                       setModifyBlock(d.order);
                       setModifyText(d.text);
@@ -452,7 +447,7 @@ export default function AdminWriting() {
       {displayPopup ? (
         <PopupChildren type={"Modifier"} buttons={buttonList}>
           <div>
-            <h2>{"Block n°" + modifyBlock}</h2>
+            <h2>{resource.list.blockNum + "" + modifyBlock}</h2>
             <textarea
               cols={40}
               rows={10}

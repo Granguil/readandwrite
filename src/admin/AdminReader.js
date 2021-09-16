@@ -39,15 +39,15 @@ function AdminReader() {
     <div className={style.explorerBody}>
       <div className={style.enveloppe}>
         <div className={style.config}>
-          <div>Nom</div>
+          <div>{resource.list.name}</div>
           <div>Explorer</div>
         </div>
         <div className={style.config}>
-          <div>Nombre de Cartes</div>
+          <div>{resource.list.numberCard}</div>
           <div>{numberCard}</div>
         </div>
         <div className={style.config}>
-          <div>Charger Tout</div>
+          <div>{resource.list.loadAll}</div>
           <div>
             <input
               className={style.input}
@@ -61,7 +61,7 @@ function AdminReader() {
           </div>
         </div>
         <div className={style.config}>
-          <div>Afficher Tout</div>
+          <div>{resource.list.displayAll}</div>
           <div>
             <input
               className={style.input}
@@ -75,7 +75,7 @@ function AdminReader() {
           </div>
         </div>
         <div className={style.config}>
-          <div>Avec Info</div>
+          <div>{resource.list.withInfo}</div>
           <div>
             <input
               className={style.input}
@@ -89,7 +89,7 @@ function AdminReader() {
           </div>
         </div>
         <div className={style.config}>
-          <div>Info dans une Popup</div>
+          <div>{resource.list.infoInPopup}</div>
           <div>
             <input
               className={style.input}
@@ -105,7 +105,7 @@ function AdminReader() {
         <div className={style.config}>
           {!loading ? (
             <ButtonCustom
-              text={"Modifier"}
+              text={resource.list.edit}
               type={ButtonTypeList.edit}
               callback={() => {
                 setLoading(true);
@@ -113,7 +113,7 @@ function AdminReader() {
             />
           ) : (
             <ButtonCustom
-              text={"Appliquer"}
+              text={resource.list.apply}
               callback={() => {
                 setDisplayParam(displayAll);
                 setLoadParam(loadAll);
@@ -130,7 +130,7 @@ function AdminReader() {
         {!loading ? (
           <div className={style.buttonCenter}>
             <ButtonCustom
-              text={"Sauver"}
+              text={resource.list.save}
               type={ButtonTypeList.create}
               callback={() => {
                 fetchData(
@@ -139,20 +139,20 @@ function AdminReader() {
                   {
                     ...dataToSend,
                     type: type.json,
-                    content: {
+                    content: JSON.stringify({
                       name: "explorer",
                       displayAll: displayParam,
                       loadAll: loadParam,
                       withInfo: withInfoParam,
                       infoPopup: infoPopupParam,
-                    },
+                    }),
                   },
                   {
                     ...dataToGet,
                     type: type.json,
                     callback: (data) => {
                       NewToaster({
-                        title: "Sauvegarde",
+                        title: resource.list.saveConfig,
                         position: positionToaster.left,
                         color: colorToaster.info,
                         text: data.message,
@@ -198,7 +198,7 @@ function AdminReader() {
             }
           />
         ) : (
-          <div>Loading...</div>
+          <div>{resource.list.loading}</div>
         )}
       </div>
     </div>

@@ -35,8 +35,18 @@ export default function Home({ contentNavigation }) {
         resource.list !== undefined ? resource.list.contactTitle : "Contact",
     },
     {
+      type: "Text",
+      text:
+        resource.list !== undefined
+          ? resource.list.creatorTitle
+          : "Créer et Administrer par Granguil",
+    },
+    {
       type: "Link",
-      text: resource.list !== undefined ? resource.list.contactLink : "test",
+      text:
+        resource.list !== undefined
+          ? resource.list.contactLink
+          : "www.sitedegranguil.fr",
       link:
         resource.list !== undefined
           ? resource.list.contactLink

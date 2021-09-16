@@ -9,6 +9,7 @@ import { dataConnect } from "connexion";
 import { NewToaster, positionToaster, colorToaster } from "toaster";
 import { Popup } from "popup";
 import { ButtonCustom, ButtonTypeList } from "button";
+import resource from "resource";
 
 export const explorerConfig = {
   load: {
@@ -83,10 +84,12 @@ export const explorerConfig = {
           ...dataToGet,
           callback: (bool) => {
             NewToaster({
-              title: bool ? "Success" : "Fail",
+              title: bool ? resource.list.success : resource.list.fail,
               position: positionToaster.left,
               color: bool ? colorToaster.success : colorToaster.error,
-              text: bool ? "Success Creation" : "Creation Failed",
+              text: bool
+                ? resource.list.successCreation
+                : resource.list.failCreation,
             });
           },
         },
@@ -104,16 +107,16 @@ export const explorerConfig = {
           callback: (bool) => {
             bool
               ? NewToaster({
-                  title: "Success",
+                  title: resource.list.success,
                   position: positionToaster.left,
                   color: colorToaster.success,
-                  text: "Scene marked as read",
+                  text: resource.list.markAsRead,
                 })
               : NewToaster({
-                  title: "Fail",
+                  title: resource.list.fail,
                   position: positionToaster.left,
                   color: colorToaster.error,
-                  text: "Fail to mark scene",
+                  text: resource.list.failMarkAsRead,
                 });
           },
         },
@@ -130,10 +133,10 @@ export const explorerConfig = {
           ...dataToGet,
           callback: () => {
             NewToaster({
-              title: "Delete",
+              title: resource.list.delete,
               position: positionToaster.left,
               color: colorToaster.error,
-              text: "BookMark Deleted",
+              text: resource.list.deleteBookmark,
             });
             setReload(!reload);
           },
@@ -186,7 +189,7 @@ export const explorerConfig = {
       let buttons = [];
       buttons.push(() => (
         <ButtonCustom
-          text={"Fermer"}
+          text={resource.list.close}
           callback={() => callback()}
           type={ButtonTypeList.back}
         />
@@ -196,7 +199,7 @@ export const explorerConfig = {
     returnButton: (setter) => {
       return (
         <ButtonCustom
-          text={"Fermer"}
+          text={resource.list.close}
           callback={() => setter()}
           type={ButtonTypeList.back}
         />
