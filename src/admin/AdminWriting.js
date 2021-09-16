@@ -1,7 +1,7 @@
 import { ButtonCustom, ButtonTypeList } from "button";
 import { SimpleCard } from "card";
 import { dataToGet, dataToSend, fetchData, methodType } from "fetchhelper";
-import { Popup } from "popup";
+import { PopupChildren } from "popup";
 import React, { useEffect, useState } from "react";
 import { NewToaster, positionToaster, colorToaster } from "toaster";
 import Style from "./../carte.module.css";
@@ -19,11 +19,13 @@ export default function AdminWriting() {
   });
   const [savingBlock, setBlock] = useState({
     parent: null,
-    blocks: [{ content: "", order: -1, id: null }],
+    blocks: [{ content: "", order: -1, id: null, status: "NONE" }],
   });
   const [displayPopup, setDisplayPopup] = useState(false);
   const [modifyBlock, setModifyBlock] = useState(-1);
   const [modifyText, setModifyText] = useState("");
+  const [orderOfNewBlock, setOrderOfNewBlock] = useState(1);
+  const [numberOfBlock, setNumberOfBlock] = useState(0);
   const [dataDisplay, setDataDisplay] = useState({
     universe: [],
     book: [],
@@ -87,13 +89,14 @@ export default function AdminWriting() {
                           scene: scene !== undefined ? scene : [],
                           block: dataBlock.blocks,
                         });
-
+                        setNumberOfBlock(dataBlock.blocks.length);
                         const block = [];
                         for (let item of dataBlock.blocks) {
                           block.push({
                             order: item.order,
                             content: item.text,
                             id: item.id,
+                            status: "NONE",
                           });
                         }
                         setBlock({
@@ -142,9 +145,15 @@ export default function AdminWriting() {
           } else {
             setDataDisplay({ ...dataDisplay, block: dataGet.blocks });
           }
+          setNumberOfBlock(dataGet.blocks.length);
           const block = [];
           for (let item of dataGet.blocks) {
-            block.push({ order: item.order, content: item.text, id: item.id });
+            block.push({
+              order: item.order,
+              content: item.text,
+              id: item.id,
+              status: "NONE",
+            });
           }
           setBlock({
             ...savingBlock,
@@ -193,13 +202,36 @@ export default function AdminWriting() {
       );
     }
   };
-  const saveBlocks = (publish) => {
+  const saveBlocks = (publish, State) => {
+    let sb = { ...savingBlock };
+    let sbb = [...sb.blocks];
+    console.log(State);
+    if (State === "NEW") {
+      for (let item of sbb) {
+        if (item.order >= orderOfNewBlock) {
+          item.order++;
+        }
+      }
+      sbb.push({ order: orderOfNewBlock, content: "New Block", status: State });
+    } else if (State === "DELETE") {
+      let itemToReplace = sbb.splice(
+        sbb.findIndex((x) => x.order === modifyBlock),
+        1
+      );
+      sbb.push({
+        order: modifyBlock,
+        content: "",
+        status: State,
+        id: itemToReplace[0].id,
+      });
+    }
+    sb.blocks = [...sbb];
     fetchData(
       "/Read/SaveBlocksForScene",
       methodType.Post,
       {
         ...dataToSend,
-        content: JSON.stringify({ ...savingBlock, publish: publish }),
+        content: JSON.stringify({ ...sb, publish: publish }),
       },
       {
         ...dataToGet,
@@ -219,39 +251,12 @@ export default function AdminWriting() {
       false
     );
   };
-  const contentToModify = () => {
-    return (
-      <div>
-        <h2>{"Block n°" + modifyBlock}</h2>
-        <textarea
-          cols={40}
-          rows={10}
-          value={modifyText}
-          onChange={(e) => {
-            setModifyText(e.target.value);
-            let sb = [...savingBlock.blocks];
-            let itemToReplace = sb.splice(
-              sb.findIndex((x) => x.order === modifyBlock),
-              1
-            );
-            const blockToModify = {
-              order: modifyBlock,
-              content: e.target.value,
-              id: itemToReplace[0].id,
-            };
-            sb.push(blockToModify);
-            setBlock({ ...savingBlock, blocks: [...sb] });
-          }}
-        />
-      </div>
-    );
-  };
   const buttonSave = () => {
     return (
       <ButtonCustom
         text={"Save"}
         callback={() => {
-          saveBlocks(false);
+          saveBlocks(false, "NONE");
           setDisplayPopup(false);
         }}
         type={ButtonTypeList.edit}
@@ -263,10 +268,22 @@ export default function AdminWriting() {
       <ButtonCustom
         text={"Save And Publish Scene"}
         callback={() => {
-          saveBlocks(true);
+          saveBlocks(true, "NONE");
           setDisplayPopup(false);
         }}
         type={ButtonTypeList.create}
+      />
+    );
+  };
+  const buttonDelete = () => {
+    return (
+      <ButtonCustom
+        text={"Delete Block"}
+        callback={() => {
+          saveBlocks(true, "DELETE");
+          setDisplayPopup(false);
+        }}
+        type={ButtonTypeList.deleteItem}
       />
     );
   };
@@ -286,7 +303,11 @@ export default function AdminWriting() {
   const buttonList = [];
   buttonList.push(buttonSave);
   buttonList.push(buttonSaveAndPublish);
+  buttonList.push(buttonDelete);
   buttonList.push(buttonReturn);
+  const addBlocks = () => {
+    saveBlocks(false, "NEW");
+  };
   return (
     <div className={Style.displayCards + " " + Style.wrap}>
       <SimpleCard>
@@ -363,6 +384,43 @@ export default function AdminWriting() {
                 ))}
             </select>
           </div>
+          <div className={Style.center}>
+            <ButtonCustom
+              text={"Add Block"}
+              callback={() => {
+                addBlocks();
+                setOrderOfNewBlock(1);
+              }}
+              type={ButtonTypeList.create}
+            />
+          </div>
+          <div>
+            <label htmlFor={"Order"}>Order of new block</label>
+          </div>
+          <input
+            className={Style.orderNewBlock}
+            type="number"
+            value={orderOfNewBlock}
+            onChange={(e) => {
+              let orderNew = e.target.value;
+              if (
+                (orderNew < 1 ||
+                  orderNew > numberOfBlock + 1 ||
+                  orderNew === "-") &&
+                orderNew !== ""
+              ) {
+                NewToaster({
+                  title: "Out Of Bound",
+                  position: positionToaster.left,
+                  color: colorToaster.error,
+                  text: "Invalid Order of New Block",
+                });
+              } else {
+                console.log(orderNew);
+                setOrderOfNewBlock(orderNew);
+              }
+            }}
+          />
         </div>
       </SimpleCard>
       {dataDisplay.block
@@ -392,11 +450,32 @@ export default function AdminWriting() {
           );
         })}
       {displayPopup ? (
-        <Popup
-          type={"Modifier"}
-          text={() => contentToModify()}
-          buttons={buttonList}
-        />
+        <PopupChildren type={"Modifier"} buttons={buttonList}>
+          <div>
+            <h2>{"Block n°" + modifyBlock}</h2>
+            <textarea
+              cols={40}
+              rows={10}
+              value={modifyText}
+              onChange={(e) => {
+                setModifyText(e.target.value);
+                let sb = [...savingBlock.blocks];
+                let itemToReplace = sb.splice(
+                  sb.findIndex((x) => x.order === modifyBlock),
+                  1
+                );
+                const blockToModify = {
+                  order: modifyBlock,
+                  content: e.target.value,
+                  id: itemToReplace[0].id,
+                  status: "NONE",
+                };
+                sb.push(blockToModify);
+                setBlock({ ...savingBlock, blocks: [...sb] });
+              }}
+            />
+          </div>
+        </PopupChildren>
       ) : null}
     </div>
   );

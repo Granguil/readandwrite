@@ -164,3 +164,10 @@ h3 {
 .align {
   text-align: center;
 }
+
+.orderNewBlock {
+  text-align: center;
+  margin-right: auto;
+  margin-left: auto;
+  width: 60px;
+}
